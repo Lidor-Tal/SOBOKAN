@@ -38,3 +38,10 @@ function removeElement(i, j, timer) {
     }, timer)
 
 }
+
+function switchClassList(location, oldClassList, newClassList) {
+    const elCell = getClassName(location)
+    var cell = document.querySelector('.' + elCell)
+    cell.classList.remove(oldClassList)
+    cell.classList.add(newClassList)
+}

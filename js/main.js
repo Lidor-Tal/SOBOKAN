@@ -184,20 +184,21 @@ function moveTo(i, j) {
         }
         if (targetCell.gameElement === GLUE) {
             console.log('oops')
-            gIsFrozen = true
-            gScore + 5
             gRed = true
+            gIsFrozen = true
+            gScore -= 5
             setTimeout(() => {
                 gIsFrozen = false
             }, 3000)
         } else if (targetCell.gameElement === COINS) {
             console.log('MONEYYYY')
             gGreen = true
-            gScore + 100
+            gScore += 100
             var elScore = document.querySelector('.score')
             elScore.innerHTML = gScore
         } else if (targetCell.gameElement === CLOCK) {
             console.log('TIME STOPPED')
+            gGreen = true
             gStepStop = 0
 
         }
@@ -215,17 +216,14 @@ function moveTo(i, j) {
         gBoard[gGamerPos.i][gGamerPos.j].gameElement = GAMER;
         // DOM:
         renderCell(gGamerPos, GAMER_IMG);
+
         if (gRed === true) {
-            const elCell = getClassName(gGamerPos)
-            var cell = document.querySelector('.' + elCell)
-            cell.classList.remove('green')
-            cell.classList.add('red')
+            if (targetCell.type === MARK) return
+            switchClassList(gGamerPos, 'green', 'red')
         }
         if (gGreen === true) {
-            const elCell = getClassName(gGamerPos)
-            var cell = document.querySelector('.' + elCell)
-            cell.classList.remove('red')
-            cell.classList.add('green')
+            if (targetCell.type === MARK) return
+            switchClassList(gGamerPos, 'red', 'green')
         }
         stepCount()
         checkifWin()
@@ -279,16 +277,28 @@ function boxOnMarkedCell(i, j) {
 
 function checkifWin() {
     if (gBoxCount === 0) OnWin()
-    if (gStepCount === 60) OnLoose()
+    if (gStepCount === 0) OnLoose()
 }
 
 function OnLoose() {
+    gGamerPos.classList.remove('green')
+    gGamerPos.classList.remove('red')
+
+    clearInterval(gSpawnClockInt)
+    clearInterval(gSpawnCoinsInt)
+    clearInterval(gSpawnGlueInt)
 
     gGameIsOn = false
     document.querySelector('.gameover').style.display = 'block'
 }
 
 function OnWin() {
+    gGamerPos.classList.remove('green')
+    gGamerPos.classList.remove('red')
+
+    clearInterval(gSpawnClockInt)
+    clearInterval(gSpawnCoinsInt)
+    clearInterval(gSpawnGlueInt)
 
     gGameIsOn = false
     document.querySelector('.gamewon').style.display = 'block'
@@ -329,6 +339,7 @@ function spawnGlue() {
     renderCell(cell, GLUE_IMG)
     removeElement(cell.i, cell.j, 5000)
 }
+
 function spawnCoins() {
     var cell = getEmptyCells(gBoard)
     gBoard[cell.i][cell.j].gameElement = COINS
