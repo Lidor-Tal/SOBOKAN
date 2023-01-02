@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>Document</title>
+</head>
+
+<body onkeyup="handleKey(event)" onload="inItGame()">
+    <h1>SOBOKAN</h1>
+    <div>
+        <span>steps:</span>
+        <span class="steps">0</span>
+    </div>
+    <div>
+        <span>score:</span>
+        <span class="score">100</span>
+    </div>
+    <button class="restart" onclick="restartGame()">restart</button>
+    </div>
+    <span class="gamewon">✨VICTORY✨</span>
+    <div>
+    </div>
+    <span class="gameover">GAME OVER</span>
+    <div>
+        <table>
+            <tbody class=" board">
+            </tbody>
+        </table>
+        <script src="js/util.js"></script>
+        <script src="js/main.js"></script>
+</body>
+
+</html>

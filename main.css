@@ -1,0 +1,51 @@
+body {
+    text-align: center;
+    background-color: black;
+    color: white;
+    font-size: 25px;
+}
+
+table {
+    margin: 20px auto;
+}
+
+.cell {
+    background-color: burlywood;
+    width: 40px;
+    height: 40px;
+    text-align: center
+}
+
+.wall {
+    background-color: brown;
+}
+
+img {
+    width: 30px;
+    height: 30px;
+}
+
+.marked {
+    background-color: yellow;
+}
+
+.gamewon {
+    display: none;
+    font-size: 40px;
+    color: rgb(240, 240, 64);
+
+}
+
+.gameover {
+    font-size: 40px;
+    color: rgb(171, 3, 3);
+    display: none;
+}
+
+.red {
+    background-color: rgb(216, 0, 0);
+}
+
+.green {
+    background-color: rgb(44, 227, 44);
+}
