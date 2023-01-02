@@ -286,10 +286,6 @@ function checkifWin() {
 }
 
 function OnLoose() {
-    var elCell = getClassName(gGamerPos)
-    var cell = document.querySelector('.' + gGamerPos)
-    cell.classList.remove('green')
-    cell.classList.remove('red')
 
     clearInterval(gSpawnClockInt)
     clearInterval(gSpawnCoinsInt)
@@ -300,10 +296,6 @@ function OnLoose() {
 }
 
 function OnWin() {
-    var elCell = getClassName(gGamerPos)
-    var cell = document.querySelector('.' + gGamerPos)
-    cell.classList.remove('green')
-    cell.classList.remove('red')
 
     clearInterval(gSpawnClockInt)
     clearInterval(gSpawnCoinsInt)
@@ -326,6 +318,10 @@ function getClassName(location) {
 }
 
 function restartGame() {
+    gRed = false
+    gGreen = false
+    gStepStop = 10
+
 
     clearInterval(gSpawnGlueInt)
     clearInterval(gSpawnCoinsInt)
