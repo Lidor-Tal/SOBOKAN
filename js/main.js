@@ -184,6 +184,7 @@ function moveTo(i, j) {
         }
         if (targetCell.gameElement === GLUE) {
             console.log('oops')
+            gGreen = false
             gRed = true
             gIsFrozen = true
             gScore -= 5
@@ -192,12 +193,14 @@ function moveTo(i, j) {
             }, 3000)
         } else if (targetCell.gameElement === COINS) {
             console.log('MONEYYYY')
+            gRed = false
             gGreen = true
             gScore += 100
             var elScore = document.querySelector('.score')
             elScore.innerHTML = gScore
         } else if (targetCell.gameElement === CLOCK) {
             console.log('TIME STOPPED')
+            gRed = false
             gGreen = true
             gStepStop = 0
 
@@ -220,8 +223,10 @@ function moveTo(i, j) {
         if (gRed === true) {
             if (targetCell.type === MARK) return
             switchClassList(gGamerPos, 'green', 'red')
+
         }
         if (gGreen === true) {
+
             if (targetCell.type === MARK) return
             switchClassList(gGamerPos, 'red', 'green')
         }
@@ -281,8 +286,10 @@ function checkifWin() {
 }
 
 function OnLoose() {
-    gGamerPos.classList.remove('green')
-    gGamerPos.classList.remove('red')
+    var elCell = getClassName(gGamerPos)
+    var cell = document.querySelector('.' + gGamerPos)
+    cell.classList.remove('green')
+    cell.classList.remove('red')
 
     clearInterval(gSpawnClockInt)
     clearInterval(gSpawnCoinsInt)
@@ -293,8 +300,10 @@ function OnLoose() {
 }
 
 function OnWin() {
-    gGamerPos.classList.remove('green')
-    gGamerPos.classList.remove('red')
+    var elCell = getClassName(gGamerPos)
+    var cell = document.querySelector('.' + gGamerPos)
+    cell.classList.remove('green')
+    cell.classList.remove('red')
 
     clearInterval(gSpawnClockInt)
     clearInterval(gSpawnCoinsInt)
