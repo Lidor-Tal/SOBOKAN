@@ -29,6 +29,13 @@ img {
     background-color: yellow;
 }
 
+.gamewon {
+    display: none;
+    font-size: 40px;
+    color: rgb(240, 240, 64);
+
+}
+
 .gameover {
     font-size: 40px;
     display: none;
