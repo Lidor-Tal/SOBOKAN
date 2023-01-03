@@ -40,11 +40,10 @@ function removeElement(i, j, timer) {
 }
 
 function changeCellColor(location, color) {
-    (color === 'red') ? newClassList = 'red' : newClassList = 'green'
     const elCell = getClassName(location)
     var cell = document.querySelector('.' + elCell)
-    cell.classList.add(newClassList)
-    removeCellColor(location, newClassList, 3000)
+    cell.classList.add(color)
+    removeCellColor(location, color, 3000)
 }
 
 function removeCellColor(location, classList, timer) {

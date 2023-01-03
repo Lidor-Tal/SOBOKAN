@@ -19,7 +19,6 @@ var gBoard;
 var gGamerPos;
 
 var gScore = 100
-var gBoxCount = 7
 var gStepCount = 0
 var gStepStop = 10
 
@@ -106,11 +105,9 @@ function renderBoard(board) {
             var cellClass = getClassName({ i: i, j: j })
             if (currCell.type === FLOOR) {
                 cellClass += ' floor'
-            }
-            if (currCell.type === WALL) {
+            } else if (currCell.type === WALL) {
                 cellClass += ' wall'
-            }
-            if (currCell.type === MARK) {
+            } else if (currCell.type === MARK) {
                 cellClass += ' marked'
             }
 
@@ -268,30 +265,23 @@ function boxOnMarkedCell() {
             }
         }
     }
-    if (count === 7) gameOver()
+
+    if (count === 7) gameOver('win')
 }
 
 function checkifWin() {
-
-    if (gBoxCount === 0) gameOver('win')
     if (gScore === 0) gameOver('loose')
 }
-
 function gameOver(game) {
+    console.log(game)
     clearInterval(gSpawnClockInt)
     clearInterval(gSpawnCoinsInt)
     clearInterval(gSpawnGlueInt)
     gGameIsOn = false
-    if (game === 'win') {
-        var elCell = document.querySelector('.gameover')
-        elCell.innerHTML = '✨VICTORY✨'
-        document.querySelector('.gameover').style.display = 'block'
+    var elCell = document.querySelector('.gameover');
+    elCell.innerHTML = (game === 'win') ? '✨VICTORY✨' : 'GAME OVER';
+    document.querySelector('.gameover').style.display = 'block';
 
-    } else {
-        var elCell = document.querySelector('.gameover')
-        elCell.innerHTML = 'GAME OVER'
-        document.querySelector('.gameover').style.display = 'block'
-    }
 }
 
 // Convert a location object {i, j} to a selector and render a value in that element
@@ -310,7 +300,6 @@ function restartGame() {
     gStepCount = 0
     gStepStop = 10
     gScore = 100
-    gBoxCount = 7
 
     var elSteps = document.querySelector('.steps')
     elSteps.innerHTML = gStepCount
