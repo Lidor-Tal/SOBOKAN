@@ -21,11 +21,8 @@ var gGamerPos;
 var gScore = 100
 var gBoxCount = 7
 var gStepCount = 0
-var gStepCount = 0
 var gStepStop = 10
 
-var gRed = false
-var gGreen = false
 var gGameIsOn = true
 var gIsFrozen = false
 
@@ -73,27 +70,27 @@ function buildBoard() {
     board[6][5].gameElement = BOX
     board[6][1].gameElement = BOX
 
-    board[2][1].type = 'MARKED'
-    board[3][6].type = 'MARKED'
-    board[4][1].type = 'MARKED'
-    board[5][4].type = 'MARKED'
-    board[7][4].type = 'MARKED'
-    board[5][6].type = 'MARKED'
-    board[6][3].type = 'MARKED'
+    board[2][1].type = MARK
+    board[3][6].type = MARK
+    board[4][1].type = MARK
+    board[5][4].type = MARK
+    board[7][4].type = MARK
+    board[5][6].type = MARK
+    board[6][3].type = MARK
 
-    board[1][0].type = 'WALL'
-    board[1][1].type = 'WALL'
-    board[1][2].type = 'WALL'
-    board[1][7].type = 'WALL'
-    board[2][7].type = 'WALL'
-    board[3][7].type = 'WALL'
-    board[4][7].type = 'WALL'
-    board[3][0].type = 'WALL'
-    board[3][1].type = 'WALL'
-    board[3][2].type = 'WALL'
-    board[4][2].type = 'WALL'
-    board[5][2].type = 'WALL'
-    board[4][3].type = 'WALL'
+    board[1][0].type = WALL
+    board[1][1].type = WALL
+    board[1][2].type = WALL
+    board[1][7].type = WALL
+    board[2][7].type = WALL
+    board[3][7].type = WALL
+    board[4][7].type = WALL
+    board[3][0].type = WALL
+    board[3][1].type = WALL
+    board[3][2].type = WALL
+    board[4][2].type = WALL
+    board[5][2].type = WALL
+    board[4][3].type = WALL
 
     return board
 }
@@ -151,8 +148,8 @@ function moveTo(i, j) {
     if (gIsFrozen) return
 
     var targetCell = gBoard[i][j];
-    var currI = i
-    var currJ = j
+    var boxI = i
+    var boxJ = j
     // If the clicked Cell is one of the four allowed
     var iAbsDiff = (i - gGamerPos.i);
     var jAbsDiff = (j - gGamerPos.j);
@@ -168,40 +165,38 @@ function moveTo(i, j) {
             gBoard[i][j].gameElement = null
             //Dom:
 
-            renderCell({ i: currI, j: currJ }, '')
+            renderCell({ i: boxI, j: boxJ }, '')
             //MOVING to selected position
 
-            currI = i + iAbsDiff
-            currJ = j + jAbsDiff
+            boxI = i + iAbsDiff
+            boxJ = j + jAbsDiff
             //MODEL:
 
-            gBoard[currI][currJ].gameElement = BOX
+            gBoard[boxI][boxJ].gameElement = BOX
             //Dom:
 
-            renderCell({ i: currI, j: currJ }, BOX_IMG)
-            boxOnMarkedCell(currI, currJ)
+            renderCell({ i: boxI, j: boxJ }, BOX_IMG)
+            boxOnMarkedCell(boxI, boxJ)
 
-        }
-        if (targetCell.gameElement === GLUE) {
+
+        } else if (targetCell.gameElement === GLUE) {
             console.log('oops')
-            gGreen = false
-            gRed = true
+            changeCellColor({ i: i, j: j }, 'red')
             gIsFrozen = true
             gScore -= 5
             setTimeout(() => {
                 gIsFrozen = false
+
             }, 3000)
         } else if (targetCell.gameElement === COINS) {
             console.log('MONEYYYY')
-            gRed = false
-            gGreen = true
+            changeCellColor({ i: i, j: j }, 'green')
             gScore += 100
             var elScore = document.querySelector('.score')
             elScore.innerHTML = gScore
         } else if (targetCell.gameElement === CLOCK) {
             console.log('TIME STOPPED')
-            gRed = false
-            gGreen = true
+            changeCellColor({ i: i, j: j }, 'green')
             gStepStop = 0
 
         }
@@ -219,17 +214,6 @@ function moveTo(i, j) {
         gBoard[gGamerPos.i][gGamerPos.j].gameElement = GAMER;
         // DOM:
         renderCell(gGamerPos, GAMER_IMG);
-
-        if (gRed === true) {
-            if (targetCell.type === MARK) return
-            switchClassList(gGamerPos, 'green', 'red')
-
-        }
-        if (gGreen === true) {
-
-            if (targetCell.type === MARK) return
-            switchClassList(gGamerPos, 'red', 'green')
-        }
         stepCount()
         checkifWin()
     }
@@ -272,37 +256,42 @@ function stepCount() {
     gStepStop++
 }
 
-function boxOnMarkedCell(i, j) {
-    var currCell = gBoard[i][j].type
-    if (currCell === 'MARKED') {
-        gBoxCount--
-        checkifWin()
+function boxOnMarkedCell() {
+    var newMat = []
+    var count = 0
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            newMat.push(gBoard)
+            var currCell = newMat[i][j]
+            if (currCell[i].type === MARK && currCell[i].gameElement === BOX) {
+                count++
+            }
+        }
     }
+    if (count === 7) gameOver()
 }
 
 function checkifWin() {
-    if (gBoxCount === 0) OnWin()
-    if (gStepCount === 0) OnLoose()
+
+    if (gBoxCount === 0) gameOver('win')
+    if (gScore === 0) gameOver('loose')
 }
 
-function OnLoose() {
-
+function gameOver(game) {
     clearInterval(gSpawnClockInt)
     clearInterval(gSpawnCoinsInt)
     clearInterval(gSpawnGlueInt)
-
     gGameIsOn = false
-    document.querySelector('.gameover').style.display = 'block'
-}
+    if (game === 'win') {
+        var elCell = document.querySelector('.gameover')
+        elCell.innerHTML = '✨VICTORY✨'
+        document.querySelector('.gameover').style.display = 'block'
 
-function OnWin() {
-
-    clearInterval(gSpawnClockInt)
-    clearInterval(gSpawnCoinsInt)
-    clearInterval(gSpawnGlueInt)
-
-    gGameIsOn = false
-    document.querySelector('.gamewon').style.display = 'block'
+    } else {
+        var elCell = document.querySelector('.gameover')
+        elCell.innerHTML = 'GAME OVER'
+        document.querySelector('.gameover').style.display = 'block'
+    }
 }
 
 // Convert a location object {i, j} to a selector and render a value in that element
@@ -318,22 +307,17 @@ function getClassName(location) {
 }
 
 function restartGame() {
-    gRed = false
-    gGreen = false
-    gStepStop = 10
-
-
-    clearInterval(gSpawnGlueInt)
-    clearInterval(gSpawnCoinsInt)
-    document.querySelector('.gameover').style.display = 'none'
-    document.querySelector('.gamewon').style.display = 'none'
     gStepCount = 0
+    gStepStop = 10
     gScore = 100
     gBoxCount = 7
+
     var elSteps = document.querySelector('.steps')
     elSteps.innerHTML = gStepCount
     var elScore = document.querySelector('.score')
     elScore.innerHTML = gScore
+    document.querySelector('.gameover').style.display = 'none'
+
     gGameIsOn = true
     inItGame()
 }
@@ -357,5 +341,4 @@ function spawnClock() {
     gBoard[cell.i][cell.j].gameElement = CLOCK
     renderCell(cell, CLOCK_IMG)
     removeElement(cell.i, cell.j, 5000)
-
 }
